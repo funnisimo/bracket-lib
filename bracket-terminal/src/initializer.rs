@@ -536,7 +536,15 @@ impl BTermBuilder {
                     translator,
                 } => {
                     let font_path = path_join(&self.resource_path, font);
-                    let font_id = font_map[&font_path];
+                    let font_id = match font_map.get(&font_path) {
+                        Some(id) => *id,
+                        None => panic!(
+                            "Failed to find font: {}, choices are: {:?}",
+                            font_path,
+                            font_map.keys()
+                        ),
+                    };
+
                     let cid =
                         context.register_console(SimpleConsole::init(*width, *height), font_id);
                     context.set_translation_mode(cid, *translator);
