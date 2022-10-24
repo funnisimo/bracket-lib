@@ -70,6 +70,7 @@ pub struct BTerm {
     pub key: Option<VirtualKeyCode>,
     pub mouse_pos: (i32, i32),
     pub left_click: bool,
+    pub mouse_changed: bool,
     pub shift: bool,
     pub control: bool,
     pub alt: bool,
@@ -362,6 +363,7 @@ impl BTerm {
 
     /// Internal: mark a mouse press
     pub(crate) fn on_mouse_button(&mut self, button_num: usize, pressed: bool) {
+        self.mouse_changed = true;
         let mut input = INPUT.lock();
         if pressed {
             if button_num == 0 {
@@ -383,6 +385,7 @@ impl BTerm {
     /// Internal: mark mouse position changes
     pub(crate) fn on_mouse_position(&mut self, x: f64, y: f64) {
         let bi = BACKEND_INTERNAL.lock();
+        self.mouse_changed = true;
         self.mouse_pos = (x as i32, y as i32);
         let mut input = INPUT.lock();
         input.on_mouse_pixel_position(x, y);
